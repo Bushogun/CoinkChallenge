@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_users
+    restart: always
+    environment:
+      POSTGRES_DB: CoinkDb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/1-schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./database/2-seed.sql:/docker-entrypoint-initdb.d/2-seed.sql
+      - ./database/3-stored_procedures.sql:/docker-entrypoint-initdb.d/3-stored_procedures.sql
+
+  api:
+    build:
+      context: .
+      dockerfile: src/WebApplication1/Dockerfile
+    container_name: AppCoink
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5435;Database=CoinkDb;Username=admin;Password=admin123
+
+volumes:
+  postgres_data:
