@@ -1,4 +1,7 @@
-﻿using Application.Commands.CreateUser;
+﻿using Application.Users.Commands;
+using Application.Users.Dtos;
+using Application.Users.Queries;
+using Core.Dtos.ResponsesDto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,12 +17,19 @@ namespace API.Controllers
         {
             _mediator = mediator;
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
+        // GET api/users
+        [HttpGet]
+        [Consumes("application/json")]
+        public async Task<Result<List<UserResponseDto>>> GetUsers()
         {
-            await _mediator.Send(command);
-            return Ok();
+            return await _mediator.Send(new GetUsersQuery());
+        }
+        // POST api/users
+        [HttpPost]
+        [Consumes("application/json")]
+        public async Task<Result<CreateUserResponseDto>> PostUser([FromBody] CreateUserCommand request)
+        {
+            return await _mediator.Send(request);
         }
     }
 }

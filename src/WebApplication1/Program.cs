@@ -3,6 +3,7 @@ using MediatR;
 using Application;
 using Infraestructure.Persistance.Dapper;
 using Infraestructure.Persistance.Repositories;
+using Application.Users.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +14,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(Application.Commands.CreateUser.CreateUserCommand).Assembly)
+    cfg.RegisterServicesFromAssembly(typeof(CreateUserCommand).Assembly)
 );
 builder.Services.AddScoped<DapperContext>();
+Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+builder.Services.AddScoped<IMunicipalityRepository, MunicipalityRepository>();
 
 builder.Services.AddCors(options =>
 {
@@ -36,9 +38,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 

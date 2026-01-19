@@ -16,6 +16,7 @@ namespace Infraestructure.Persistance.Dapper
 
             _connectionString = _configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string not found");
+
         }
 
         public IDbConnection CreateConnection()

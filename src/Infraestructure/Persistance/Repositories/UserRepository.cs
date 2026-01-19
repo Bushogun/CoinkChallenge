@@ -32,5 +32,16 @@ namespace Infraestructure.Persistance.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
+
+        public async Task<List<User>> GetAllAsync()
+        {
+            using var connection = _context.CreateConnection();
+
+            var users = await connection.QueryAsync<User>(
+                $"SELECT * FROM {UserStoredProcedures.GetUsers}()"
+            );
+
+            return users.ToList();
+        }
     }
 }

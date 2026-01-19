@@ -8,8 +8,19 @@
         public string Address { get; private set; }
         public int MunicipalityId { get; private set; }
 
+        protected User() { }
+
         public User(string name, string phone, string address, int municipalityId)
         {
+            Name = name;
+            Phone = phone;
+            Address = address;
+            MunicipalityId = municipalityId;
+        }
+
+        public User(int id, string name, string phone, string address, int municipalityId)
+        {
+            Id = id;
             Name = name;
             Phone = phone;
             Address = address;
